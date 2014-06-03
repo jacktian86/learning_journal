@@ -27,7 +27,7 @@ def hello():
 
 # add this after app is defined
 app.config['DATABASE'] = os.environ.get(
-    'DATABASE_URL', 'dbname=learning_journal user='
+    'DATABASE_URL', 'dbname=learning_journal'
 )
 
 
