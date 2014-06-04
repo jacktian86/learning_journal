@@ -4,6 +4,7 @@ import psycopg2
 from contextlib import closing
 from flask import g
 import datetime
+from flask import render_template
 
 # -*- coding: utf-8 -*-
 from flask import Flask
@@ -53,9 +54,9 @@ def write_entry(title, text):
 
 
 @app.route('/')
-def hello():
-    return u'Hello world!'
-
+def show_entries():
+    entries = get_all_entries()
+    return render_template('list_entries.html', entries=entries)
 
 # add this after app is defined
 app.config['DATABASE'] = os.environ.get(

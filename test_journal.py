@@ -75,3 +75,38 @@ def test_get_all_entries(req_context):
         assert expected[0] == entry['title']
         assert expected[1] == entry['text']
         assert 'created' in entry
+
+
+def test_empty_listing(db):
+    actual = app.test_client().get('/').data
+    expected = 'No entries here so far'
+    assert expected in actual
+
+
+@pytest.fixture(scope='function')
+def with_entry(db, request):
+    from journal import write_entry
+    expected = (u'Test Title', u'Test Text')
+    with app.test_request_context('/'):
+        write_entry(*expected)
+        # manually commit transaction here to avoid rollback due to
+        # handled exceptions
+        get_database_connection().commit()
+
+    def cleanup():
+        with app.test_request_context('/'):
+            con = get_database_connection()
+            cur = con.cursor()
+            cur.execute("DELETE FROM entries")
+            # and here as well
+            con.commit()
+    request.addfinalizer(cleanup)
+
+    return expected
+
+
+def test_listing(with_entry):
+    expected = with_entry
+    actual = app.test_client().get('/').data
+    for value in expected:
+        assert value in actual
