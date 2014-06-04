@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # add this import at the top of your file:
 import os
 import psycopg2
@@ -6,7 +7,6 @@ from flask import g
 import datetime
 from flask import render_template
 
-# -*- coding: utf-8 -*-
 from flask import Flask
 
 DB_SCHEMA = """
@@ -106,5 +106,5 @@ def teardown_request(exception):
 
 # put this at the very bottom of the file.
 if __name__ == '__main__':
-    app.run(debug=True)
-    #app.run(host="0.0.0.0",debug=True)
+    #app.run(debug=True)
+    app.run(host="0.0.0.0",debug=True)
