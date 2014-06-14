@@ -31,12 +31,20 @@ DB_ENTRY_INSERT = """
 INSERT INTO entries (title, text, created) VALUES (%s, %s, %s)
 """
 
+DB_SPECIFIC_ENTRY = """
+SELECT id, title, text, created FROM entries WHERE id = %s
+"""
 
 # add this new SQL string below the others
 DB_ENTRIES_LIST = """
 SELECT id, title, text, created FROM entries ORDER BY created DESC
 """
 
+DB_UPDATE_ENTRY = """
+UPDATE entries
+SET title=%s, text=%s
+WHERE id = %s
+"""
 
 app = Flask(__name__)
 
@@ -50,6 +58,18 @@ def get_all_entries():
     return [dict(zip(keys, row)) for row in cur.fetchall()]
 # add this just below the SQL table definition we just created
 
+def get_specific_entry(entry_number):
+    con = get_database_connection()
+    cur = con.cursor()
+    cur.execute(DB_SPECIFIC_ENTRY, [entry_number])
+    keys = ('id', 'title', 'text', 'created')
+    return [dict(zip(keys, row)) for row in cur.fetchall()][0]
+
+#NOT WORKING
+def update_entry(title, text, entry_number):
+    con = get_database_connection()
+    cur = con.cursor()
+    cur.execute(DB_UPDATE_ENTRY, [title, text, entry_number])
 
 def write_entry(title, text):
     if not title or not text:
@@ -92,6 +112,15 @@ def logout():
     session.pop('logged_in', None)
     return redirect(url_for('show_entries'))
 
+@app.route('/edit/<entry_number>', methods=['GET', 'POST'])
+def edit(entry_number):
+    if request.method == 'GET':
+        entry = get_specific_entry(entry_number)
+        return render_template('edit.html', entry=entry)
+    elif request.method == 'POST':
+        update_entry(request.form['title'], request.form['text'], entry_number)
+        return redirect(url_for('show_entries'))
+        
 # add this after app is defined
 app.config['DATABASE'] = os.environ.get(
     'DATABASE_URL', 'dbname=learning_journal'

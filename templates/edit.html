@@ -3,7 +3,7 @@
 
 {% if session.logged_in %}
 <aside>
-<form action="{{ url_for('add_entry') }}" method="POST" class="add_entry">
+<form action="{{ url_for('edit', entry_number=entry.id) }}" method="POST" class="update_entry">
   <div class="field">
     <label for="title">Title</label>
     <input type="text" size="30" name="title" id="title"/>
@@ -13,25 +13,19 @@
     <textarea name="text" id="text" rows="5" cols="80"></textarea>
   </div>
   <div class="control_row">
-    <input type="submit" value="Share" name="Share"/>
+    <input type="submit" value="Update" name="Update"/>
   </div>
 </form>
 </aside>
 {% endif %}
 
-  <h2>Entries</h2>
-  {% for entry in entries %}
+  <h2>Current Entry</h2>
   <article class="entry" id="entry={{entry.id}}">
     <h3>{{ entry.title }}</h3>
-    <a href="{{ url_for('edit',entry_number = entry.id) }}">edit</a>
     <p class="dateline">{{ entry.created.strftime('%b. %d, %Y') }}
     <div class="entry_body">
       {{ entry.text|safe }}
     </div>
   </article>
-  {% else %}
-  <div class="entry">
-    <p><em>No entries here so far</em></p>
-  </div>
-  {% endfor %}
+
 {% endblock %}
