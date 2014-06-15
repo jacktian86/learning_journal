@@ -39,8 +39,7 @@ SELECT id, title, text, created FROM entries ORDER BY created DESC
 
 
 DB_ENTRY_LIST = """
-SELECT title, text, created FROM entries
-WHERE id=(%s)
+SELECT title, text, created FROM entries WHERE id = %s
 """
 
 
@@ -59,12 +58,12 @@ app = Flask(__name__)
 def get_entry(entry_id):
     con = get_database_connection()
     cur = con.cursor()
-    cur.execute(DB_ENTRY_LIST, (entry_id, ))
+    cur.execute(DB_ENTRY_LIST, [entry_id])
 #    fetched is list of relations
     fetched = cur.fetchall()
     print 'in get_entry'
     print fetched
-    keys = ('title', 'text', 'created')
+    keys = ('id', 'title', 'text', 'created')
     return dict(zip(keys, fetched))
 
 

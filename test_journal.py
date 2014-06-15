@@ -88,8 +88,8 @@ def test_get_entry(req_context):
     entry_id = 0
     entry = get_entry(entry_id)
     print "entry is: {}".format(entry)
-    assert expected[0] == entry['title']
-    assert expected[1] == entry['text']
+    assert expected[1] == entry['title']
+    assert expected[2] == entry['text']
 
 
 def test_empty_listing(db):
