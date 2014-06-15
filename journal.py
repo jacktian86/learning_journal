@@ -40,7 +40,7 @@ SELECT id, title, text, created FROM entries ORDER BY created DESC
 
 DB_ENTRY_LIST = """
 SELECT title, text, created FROM entries
-WHERE id=%s
+WHERE id=(%s)
 """
 
 
@@ -48,7 +48,7 @@ WHERE id=%s
 DB_ENTRY_UPDATE = """
 UPDATE entries
 SET (title, text, created) = (%s, %s, %s)
-WHERE id=%s
+WHERE id=(%s)
 
 """
 
@@ -59,9 +59,13 @@ app = Flask(__name__)
 def get_entry(entry_id):
     con = get_database_connection()
     cur = con.cursor()
-    cur.execute(DB_ENTRY_LIST, entry_id)
+    cur.execute(DB_ENTRY_LIST, (entry_id, ))
+#    fetched is list of relations
+    fetched = cur.fetchall()
+    print 'in get_entry'
+    print fetched
     keys = ('title', 'text', 'created')
-    return dict(zip(keys, cur.fetchall()))
+    return dict(zip(keys, fetched))
 
 
 def get_all_entries():
@@ -70,7 +74,9 @@ def get_all_entries():
     cur = con.cursor()
     cur.execute(DB_ENTRIES_LIST)
     keys = ('id', 'title', 'text', 'created')
-    return [dict(zip(keys, row)) for row in cur.fetchall()]
+    entries = cur.fetchall()
+    print entries
+    return [dict(zip(keys, row)) for row in entries]
 # add this just below the SQL table definition we just created
 
 
