@@ -67,29 +67,28 @@ def test_get_all_entries_empty(req_context):
     assert len(entries) == 0
 
 
-def test_get_all_entries(req_context):
+def test_get_all_entries(req_context, capsys):
     from journal import get_all_entries, write_entry
     expected = ("My Title", "My Text")
     write_entry(*expected)
     entries = get_all_entries()
     assert len(entries) == 1
-    print "in get all entries"
     for entry in entries:
-        print entry
         assert expected[0] == entry['title']
         assert expected[1] == entry['text']
         assert 'created' in entry
 
 
-def test_get_entry(req_context):
+def test_get_entry(req_context, capsys):
     from journal import get_entry, write_entry
     expected = ("My Title", "My Text")
     write_entry(*expected)
-    entry_id = 0
+    entry_id = 3
     entry = get_entry(entry_id)
     print "entry is: {}".format(entry)
-    assert expected[1] == entry['title']
-    assert expected[2] == entry['text']
+    print "expected[0] is: {}".format(expected[0])
+    assert expected[0] == entry['title']
+    assert expected[1] == entry['text']
 
 
 def test_empty_listing(db):

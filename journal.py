@@ -59,12 +59,8 @@ def get_entry(entry_id):
     con = get_database_connection()
     cur = con.cursor()
     cur.execute(DB_ENTRY_LIST, [entry_id])
-#    fetched is list of relations
-    fetched = cur.fetchall()
-    print 'in get_entry'
-    print fetched
-    keys = ('id', 'title', 'text', 'created')
-    return dict(zip(keys, fetched))
+    keys = ('title', 'text', 'created')
+    return dict(zip(keys, cur.fetchone()))
 
 
 def get_all_entries():
