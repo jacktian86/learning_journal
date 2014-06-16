@@ -22,11 +22,10 @@
   <h2>Entries</h2>
   {% for entry in entries %}
   <article class="entry" id="entry={{entry.id}}">
-    <h3>{{ entry.title }}</h3>
-    <a href="{{ url_for('edit',entry_number = entry.id) }}">edit</a>
+      <h3><a href="/entry/{{entry.id}}">{{ entry.title }}</a></h3>
     <p class="dateline">{{ entry.created.strftime('%b. %d, %Y') }}
     <div class="entry_body">
-      {{ entry.text|safe }}
+      {{ entry.text|safe}}
     </div>
   </article>
   {% else %}

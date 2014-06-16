@@ -10,6 +10,7 @@ from flask import session
 
 TEST_DSN = 'dbname=test_learning_journal'
 
+
 def clear_db():
     with closing(connect_db()) as db:
         db.cursor().execute("DROP TABLE entries")
@@ -60,6 +61,26 @@ def test_write_entry(req_context):
         assert val in rows[0]
 
 
+def test_update_entry(req_context):
+    from journal import write_entry, update_entry
+    initial = ("Initial Title", "Initial Text")
+    expected = ("New Title", "New Text")
+    write_entry(*initial)
+    rows = run_independent_query("SELECT * FROM entries")
+    (id_num, ) = run_independent_query(
+        "SELECT id FROM entries WHERE title='Initial Title'")[0]
+    print id_num
+    assert len(rows) == 1
+    for val in initial:
+        assert val in rows[0]
+    # do the update
+    update_entry(id_num, *expected)
+    rows = run_independent_query("SELECT * FROM entries")
+    assert len(rows) == 1
+    for val in expected:
+        assert val in rows[0]
+
+
 def test_get_all_entries_empty(req_context):
     from journal import get_all_entries
     entries = get_all_entries()
@@ -76,6 +97,16 @@ def test_get_all_entries(req_context):
         assert expected[0] == entry['title']
         assert expected[1] == entry['text']
         assert 'created' in entry
+
+
+def test_get_entry(req_context):
+    from journal import get_entry, write_entry
+    expected = ("My Title", "My Text")
+    write_entry(*expected)
+    entry_id = 4
+    entry = get_entry(entry_id)
+    assert expected[0] == entry['title']
+    assert expected[1] == entry['text']
 
 
 def test_empty_listing(db):
@@ -112,6 +143,7 @@ def test_listing(with_entry):
     for value in expected:
         assert value in actual
 
+
 def test_add_entries(db):
     entry_data = {
         u'title': u'Hello',
@@ -123,6 +155,7 @@ def test_add_entries(db):
     assert 'No entries here so far' not in actual
     for expected in entry_data.values():
         assert expected in actual
+
 
 # at the end, add new tests
 def test_do_login_success(req_context):
@@ -177,6 +210,7 @@ def test_login_fails(db):
     username, password = ('admin', 'wrong')
     response = login_helper(username, password)
     assert 'Login Failed' in response.data
+
 
 def test_logout(db):
     home = login_helper('admin', 'admin').data
