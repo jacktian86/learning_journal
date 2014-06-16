@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block body %}
 
-  <h2>Entries</h2>
+  <h2>Entry</h2>
   <article class="entry" id="entry={{entry.id}}">
       <h3>{{ entry.title }}</h3>
     <p class="dateline">{{ entry.created.strftime('%b. %d, %Y') }}
     <div class="entry_body">
-      {{ entry.text|safe|markdown }}
+      {{ entry.text|safe}}
     </div>
     <div class="edit_link">
         <a href="edit">Edit Entry</a>
