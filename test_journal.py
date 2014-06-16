@@ -61,13 +61,33 @@ def test_write_entry(req_context):
         assert val in rows[0]
 
 
+def test_update_entry(req_context):
+    from journal import write_entry, update_entry
+    initial = ("Initial Title", "Initial Text")
+    expected = ("New Title", "New Text")
+    write_entry(*initial)
+    rows = run_independent_query("SELECT * FROM entries")
+    (id_num, ) = run_independent_query(
+        "SELECT id FROM entries WHERE title='Initial Title'")[0]
+    print id_num
+    assert len(rows) == 1
+    for val in initial:
+        assert val in rows[0]
+    # do the update
+    update_entry(id_num, *expected)
+    rows = run_independent_query("SELECT * FROM entries")
+    assert len(rows) == 1
+    for val in expected:
+        assert val in rows[0]
+
+
 def test_get_all_entries_empty(req_context):
     from journal import get_all_entries
     entries = get_all_entries()
     assert len(entries) == 0
 
 
-def test_get_all_entries(req_context, capsys):
+def test_get_all_entries(req_context):
     from journal import get_all_entries, write_entry
     expected = ("My Title", "My Text")
     write_entry(*expected)
@@ -79,14 +99,12 @@ def test_get_all_entries(req_context, capsys):
         assert 'created' in entry
 
 
-def test_get_entry(req_context, capsys):
+def test_get_entry(req_context):
     from journal import get_entry, write_entry
     expected = ("My Title", "My Text")
     write_entry(*expected)
-    entry_id = 3
+    entry_id = 4
     entry = get_entry(entry_id)
-    print "entry is: {}".format(entry)
-    print "expected[0] is: {}".format(expected[0])
     assert expected[0] == entry['title']
     assert expected[1] == entry['text']
 

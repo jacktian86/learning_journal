@@ -90,7 +90,7 @@ def update_entry(entry_id, title, text):
     con = get_database_connection()
     cur = con.cursor()
     now = datetime.datetime.utcnow()
-    cur.execute(DB_ENTRY_UPDATE, [(title, text, now), entry_id])
+    cur.execute(DB_ENTRY_UPDATE, (title, text, now, entry_id))
 
 
 @app.route('/')
