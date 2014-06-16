@@ -9,4 +9,8 @@ passlib==1.6.2
 psycopg2==2.5.3
 py==1.4.20
 pytest==2.5.2
+python-dateutil==2.2
+pytz==2014.4
+six==1.7.2
+tzlocal==1.1.1
 wsgiref==0.1.2
