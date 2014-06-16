@@ -3,10 +3,8 @@
 import os
 import psycopg2
 from contextlib import closing
-from flask import g
 from datetime import datetime
 from dateutil import tz
-from flask import render_template
 
 from flask import Flask
 from flask import abort
@@ -14,6 +12,9 @@ from flask import request
 from flask import url_for
 from flask import redirect
 from flask import session
+from flask import g
+from flask import render_template
+from flaskext.markdown import Markdown
 
 from passlib.hash import pbkdf2_sha256
 
@@ -54,6 +55,7 @@ WHERE id=(%s)
 
 
 app = Flask(__name__)
+Markdown(app)
 
 
 def get_local_datetime():
@@ -129,7 +131,7 @@ def edit_entry(entry_id):
     if request.method == 'GET':
         print "in edit with entry_id: {0} and request.method: {1}".format(
             entry_id, request.method)
-        # TODO what happens when edit is called and GET method?
+        # what happens when edit is called and GET method?
         entry = get_entry(entry_id)
         return render_template('edit.html', entry=entry)
 
