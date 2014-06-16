@@ -92,6 +92,7 @@ def get_all_entries():
     return [dict(zip(keys, row)) for row in cur.fetchall()]
 # add this just below the SQL table definition we just created
 
+
 def get_specific_entry(entry_number):
     con = get_database_connection()
     cur = con.cursor()
@@ -99,11 +100,6 @@ def get_specific_entry(entry_number):
     keys = ('id', 'title', 'text', 'created')
     return [dict(zip(keys, row)) for row in cur.fetchall()][0]
 
-#NOT WORKING
-def update_entry(title, text, entry_number):
-    con = get_database_connection()
-    cur = con.cursor()
-    cur.execute(DB_UPDATE_ENTRY, [title, text, entry_number])
 
 def write_entry(title, text):
     if not title or not text:
@@ -119,7 +115,7 @@ def update_entry(entry_id, title, text):
         raise ValueError("Title and text required for updating an entry")
     con = get_database_connection()
     cur = con.cursor()
-    now = get_local_datetime()
+    now = datetime.utcnow()
     cur.execute(DB_ENTRY_UPDATE, (title, text, now, entry_id))
 
 
@@ -192,6 +188,7 @@ def logout():
     session.pop('logged_in', None)
     return redirect(url_for('show_entries'))
 
+
 @app.route('/edit/<entry_number>', methods=['GET', 'POST'])
 def edit(entry_number):
     if request.method == 'GET':
@@ -200,7 +197,7 @@ def edit(entry_number):
     elif request.method == 'POST':
         update_entry(request.form['title'], request.form['text'], entry_number)
         return redirect(url_for('show_entries'))
-        
+
 # add this after app is defined
 app.config['DATABASE'] = os.environ.get(
     'DATABASE_URL', 'dbname=learning_journal'
