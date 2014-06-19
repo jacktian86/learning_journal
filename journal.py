@@ -67,10 +67,13 @@ app = Flask(__name__)
 
 
 def get_local_datetime(utc_time):
-    from_zone = tz.tzutc()
-    to_zone = tz.tzlocal()
-    utc_time = utc_time.replace(tzinfo=from_zone)
-    return utc_time.astimezone(to_zone)
+    local_zone = tz.tzlocal()
+    if not utc_time.tzinfo:
+        utc_zone = tz.tzutc()
+        new_utc = utc_time.replace(tzinfo=utc_zone)
+        return new_utc.astimezone(local_zone)
+    else:
+        return utc_time.astimezone(local_zone)
 
 
 def get_entry(entry_id):
@@ -107,6 +110,7 @@ def write_entry(title, text):
     con = get_database_connection()
     cur = con.cursor()
     now = datetime.utcnow()
+    now.replace(tzinfo=tz.tzutc())
     cur.execute(DB_ENTRY_INSERT, [title, text, now])
 
 
@@ -116,6 +120,7 @@ def update_entry(entry_id, title, text):
     con = get_database_connection()
     cur = con.cursor()
     now = datetime.utcnow()
+    now.replace(tzinfo=tz.tzutc())
     cur.execute(DB_ENTRY_UPDATE, (title, text, now, entry_id))
 
 
@@ -134,6 +139,7 @@ def show_entry(entry_id):
     entry = get_entry(entry_id)
     entry['text'] = markdown.markdown(
         entry['text'], extensions=['codehilite'])
+    entry['created'] = get_local_datetime(entry['created'])
     return render_template('list_entry.html', entry=entry)
 
 
