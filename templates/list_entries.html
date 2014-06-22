@@ -3,7 +3,7 @@
 
 {% if session.logged_in %}
 <aside>
-<form action="{{ url_for('add_entry') }}" method="POST" class="add_entry">
+<form id = 'AddForm' action="{{ url_for('add_entry') }}" method="POST" class="add_entry">
   <div class="field">
     <label for="title">Title</label>
     <input type="text" size="30" name="title" id="title"/>

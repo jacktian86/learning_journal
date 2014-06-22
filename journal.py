@@ -172,12 +172,13 @@ def add_entry():
         return redirect(url_for('login'))
 
 
-@app.route('/entry/<int:entry_id>/edit/', methods=['GET', 'POST'])
+@app.route('/entry/edit/<int:entry_id>', methods=['GET', 'POST'])
 def edit_entry(entry_id):
+    print 'hi'
     if 'logged_in' in session:
         if request.method == 'GET':
-            entry = get_entry(entry_id)
-            return render_template('edit.html', entry=entry)
+            entry_id = get_entry(entry_id)
+            return redirect(url_for('show_entry', entry_id=entry_id))
 
         elif request.method == 'POST':
             try:
