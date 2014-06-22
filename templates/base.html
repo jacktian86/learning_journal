@@ -13,7 +13,6 @@
     <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.1.min.js">
     </script>
     <script>
-
         $(document).ready(function() {
             var data = parseInt($('#UpdateForm').data('entry'))
             $('#AddForm').on('submit', function(event) {
@@ -23,7 +22,7 @@
                     url: '/add',
                     data: $('#AddForm').serialize(),
                     success: function(result){
-                    $('body').html(result);
+                    $('.list-head').prepend(result);
                     }
                 });
             });
@@ -35,7 +34,7 @@
                     url: '/entry/edit/'+data,
                     data: $('#UpdateForm').serialize(),
                     success: function(result){
-                    $('body').html(result);
+                    $('.entry').html(result);
                     }               
                 });
             });

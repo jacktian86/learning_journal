@@ -20,6 +20,9 @@
 {% endif %}
 
   <h2>Entries</h2>
+  <div class="list-head">
+  </div>
+
   {% for entry in entries %}
   <article class="entry" id="entry={{entry.id}}">
       <h3><a href="/entry/{{entry.id}}">{{ entry.title }}</a></h3>
