@@ -10,36 +10,8 @@
     type="text/css">
     <link href="{{ url_for('static', filename='codehilite.css') }}" rel="stylesheet"
     type="text/css">
-    <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.1.min.js">
-    </script>
-    <script>
-        $(document).ready(function() {
-            var data = parseInt($('#UpdateForm').data('entry'))
-            $('#AddForm').on('submit', function(event) {
-                event.preventDefault();
-                $.ajax({
-                    type: 'POST',
-                    url: '/add',
-                    data: $('#AddForm').serialize(),
-                    success: function(result){
-                    $('.list-head').prepend(result);
-                    }
-                });
-            });
-            console.log(data);
-            $('#UpdateForm').on('submit', function(event) {
-                event.preventDefault();
-                $.ajax({
-                    type: 'POST',
-                    url: '/entry/edit/'+data,
-                    data: $('#UpdateForm').serialize(),
-                    success: function(result){
-                    $('.entry').html(result);
-                    }               
-                });
-            });
-        });
-    </script>
+    <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.1.min.js"></script>
+    <script src="{{ url_for('static', filename='ajax_script.js')}}"></script>
   </head>
   <body>
     <header>
